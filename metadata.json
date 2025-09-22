@@ -1,0 +1,5 @@
+{
+  "name": "gemini-pwa-beta2",
+  "description": "A progressive web app chat application that allows users to send messages and receive simulated responses.",
+  "requestFramePermissions": []
+}
