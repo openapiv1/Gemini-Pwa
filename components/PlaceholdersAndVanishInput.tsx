@@ -127,7 +127,26 @@ export const PlaceholdersAndVanishInput = React.forwardRef<HTMLTextAreaElement, 
         <div className="px-2">
             <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*"/>
             
-            {imagePreview && ( <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}> <div className="relative mb-1 w-fit rounded-[1rem] px-1 pt-1"> <button type="button" className="transition-transform" onClick={() => setIsImageDialogOpen(true)}> <img src={imagePreview} alt="Image preview" className="h-14 w-14 rounded-[1rem] object-cover" /> </button> <button onClick={handleRemoveImage} className="absolute right-2 top-2 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/50 dark:bg-[#303030] text-black dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-[#515151]" aria-label="Remove image"> <XIcon className="h-4 w-4" /> </button> </div> <DialogContent> <img src={imagePreview} alt="Full size preview" className="w-full max-h-[95vh] object-contain rounded-[24px]" /> </DialogContent> </Dialog> )}
+            {/* FIX: Refactored the image preview and dialog logic. 
+                The preview thumbnail is now separate from the Dialog component to ensure it's always visible when an image is selected.
+                The Dialog component now correctly wraps only the full-size image content. */}
+            {imagePreview && (
+              <>
+                <div className="relative mb-1 w-fit rounded-[1rem] px-1 pt-1">
+                  <button type="button" className="transition-transform" onClick={() => setIsImageDialogOpen(true)}>
+                    <img src={imagePreview} alt="Image preview" className="h-14 w-14 rounded-[1rem] object-cover" />
+                  </button>
+                  <button onClick={handleRemoveImage} className="absolute right-2 top-2 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/50 dark:bg-[#303030] text-black dark:text-white transition-colors hover:bg-gray-200 dark:hover:bg-[#515151]" aria-label="Remove image">
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </div>
+                <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+                  <DialogContent>
+                    <img src={imagePreview} alt="Full size preview" className="w-full max-h-[95vh] object-contain rounded-[24px]" />
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
             
             <textarea ref={internalTextareaRef} rows={1} value={value} onChange={handleInputChange} onKeyDown={handleKeyDown} placeholder="Message..." className="custom-scrollbar w-full resize-none border-0 bg-transparent p-3 text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-300 focus:ring-0 focus-visible:outline-none min-h-[48px]" {...props} />
             

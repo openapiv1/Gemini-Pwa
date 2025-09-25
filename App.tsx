@@ -50,10 +50,25 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const stopGenerationRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const finalMessagesRef = useRef<MessageItem[]>([]);
   const currentChatIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const visualViewport = window.visualViewport;
+    if (visualViewport) {
+      const handleResize = () => {
+        const isKeyboardOpen = visualViewport.height < window.innerHeight;
+        setIsKeyboardVisible(isKeyboardOpen);
+      };
+      visualViewport.addEventListener("resize", handleResize);
+      return () => {
+        visualViewport.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     currentChatIdRef.current = activeChatId;
@@ -292,7 +307,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-white dark:bg-black">
+    <div className="fixed inset-0 overflow-hidden bg-white dark:bg-black">
       <SafeArea />
       <Sidebar
         isOpen={isSidebarOpen}
@@ -346,7 +361,7 @@ export default function App() {
 
               <div
                 className="w-full bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none"
-                style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+                style={{ paddingBottom: isKeyboardVisible ? "0px" : "env(safe-area-inset-bottom)" }}
               >
                 <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
                   <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
@@ -382,7 +397,7 @@ export default function App() {
               </div>
               <div
                 className="w-full bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none md:hidden"
-                style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+                style={{ paddingBottom: isKeyboardVisible ? "0px" : "env(safe-area-inset-bottom)" }}
               >
                 <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
                   <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
