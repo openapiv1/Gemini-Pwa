@@ -34,7 +34,8 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { API_KEY } from './env';
+// FIX: The API key must be obtained exclusively from `process.env.API_KEY`.
+// import { API_KEY } from './env';
 import SafeArea from "./components/SafeArea";
 
 function cn(...inputs: ClassValue[]) {
@@ -185,7 +186,8 @@ export default function App() {
     stopGenerationRef.current = false;
 
     try {
-      const ai = new GoogleGenAI({ apiKey: API_KEY });
+      // FIX: The API key must be obtained exclusively from `process.env.API_KEY`.
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
       const config: {
         systemInstruction: string;
@@ -196,7 +198,8 @@ export default function App() {
         temperature: 0,
       };
 
-      if (selectedModel === "gemini-2.5-pro") {
+      // FIX: The Thinking Config is only available for the `gemini-2.5-flash` model.
+      if (selectedModel === "gemini-2.5-flash") {
         config.thinkingConfig = {
           thinkingBudget: 128,
         };
@@ -359,20 +362,23 @@ export default function App() {
                 </div>
               </div>
 
-              <div
-                className="w-full bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none"
-                style={{ paddingBottom: isKeyboardVisible ? "0px" : "env(safe-area-inset-bottom)" }}
-              >
-                <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
-                  <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
-                      <PlaceholdersAndVanishInput
-                        name="message"
-                        onChange={handleChange}
-                        isGenerating={isGenerating}
-                        onStop={handleStopGeneration}
-                      />
-                  </form>
+              <div className="w-full shrink-0">
+                <div className="bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none">
+                  <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
+                    <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
+                        <PlaceholdersAndVanishInput
+                          name="message"
+                          onChange={handleChange}
+                          isGenerating={isGenerating}
+                          onStop={handleStopGeneration}
+                        />
+                    </form>
+                  </div>
                 </div>
+                <div
+                  className="bg-white dark:bg-[#212121] md:dark:bg-transparent"
+                  style={{ height: isKeyboardVisible ? '0px' : 'env(safe-area-inset-bottom)' }}
+                />
               </div>
             </>
           ) : (
@@ -395,20 +401,23 @@ export default function App() {
                   </form>
                 </div>
               </div>
-              <div
-                className="w-full bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none md:hidden"
-                style={{ paddingBottom: isKeyboardVisible ? "0px" : "env(safe-area-inset-bottom)" }}
-              >
-                <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
-                  <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
-                      <PlaceholdersAndVanishInput
-                        name="message"
-                        onChange={handleChange}
-                        isGenerating={isGenerating}
-                        onStop={handleStopGeneration}
-                      />
-                  </form>
+              <div className="w-full shrink-0 md:hidden">
+                <div className="bg-white dark:bg-[#212121] md:dark:bg-transparent rounded-t-[28px] md:rounded-none">
+                  <div className="md:max-w-4xl md:mx-auto md:px-4 pb-0 md:pb-6">
+                    <form onSubmit={handleSubmit} className="w-full md:max-w-xl md:mx-auto">
+                        <PlaceholdersAndVanishInput
+                          name="message"
+                          onChange={handleChange}
+                          isGenerating={isGenerating}
+                          onStop={handleStopGeneration}
+                        />
+                    </form>
+                  </div>
                 </div>
+                <div
+                  className="bg-white dark:bg-[#212121] md:dark:bg-transparent"
+                  style={{ height: isKeyboardVisible ? "0px" : "env(safe-area-inset-bottom)" }}
+                />
               </div>
             </>
           )}

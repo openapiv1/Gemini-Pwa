@@ -36,7 +36,8 @@ const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivE
 ));
 TooltipContent.displayName = "TooltipContent";
 
-const Dialog = ({ children, open, onOpenChange }: { children: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) => {
+// FIX: Made `children` prop optional to resolve TypeScript error.
+const Dialog = ({ children, open, onOpenChange }: { children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) => {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => onOpenChange?.(false)}>
